@@ -1,12 +1,24 @@
 const { request } = require('express');
 const express = require('express');
-const { uuid } = request('uuidv4');
+const { uuid } = require('uuidv4');
 
 const app = express();
 
 app.use(express.json());
 
 const projects = [];
+
+function logRequest(request, response, next) {
+  const { method, url } = request;
+
+  const logLabel = `[${method.toUpperCase()}] ${url}`;
+
+  console.log(logLabel);
+
+  return next();
+}
+
+app.use(logRequest);
 
 app.get('/',(request, response) => {
   return response.json({ message: 'Hello You'});
@@ -67,4 +79,4 @@ app.delete('/projects/:id',(request, response) => {
 
 app.listen(3333, () => {
   console.log('🚀️ Back-end started!')
-});
+}); 
